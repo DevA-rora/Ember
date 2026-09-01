@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        Text("hello world")
-            .font(.largeTitle)
-            .fontWeight(.semibold)
-    }
-}
+    @Environment(AuthManager.self) private var auth
 
-#Preview {
-    ContentView()
+    var body: some View {
+        if auth.isSignedIn {
+            ChatView()
+        } else {
+            AuthView()
+        }
+    }
 }

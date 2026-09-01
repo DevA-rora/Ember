@@ -11,3 +11,5 @@ build/
 *.dSYM
 .swiftpm/
 Package.resolved
+firebase-debug.log
+.firestore-rules-analysis.md

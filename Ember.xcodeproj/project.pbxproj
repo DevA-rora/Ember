@@ -7,23 +7,67 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0136926E1AAB18629A07A145 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9506ABB3E54034795038295A /* ChatViewModel.swift */; };
+		054AA02987535C541A7E2AB6 /* ThingsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4E79C24BF962EA8960F38A /* ThingsModels.swift */; };
+		08D28716754270B134C2B86D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3B6DDB03149BE7351914469A /* FirebaseFirestore */; };
+		0BD77B5E441B2A5EF34A037A /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F2ACC2FC73360C9E1E69D6E9 /* FirebaseCore */; };
 		19C1900F961D51D3B9466316 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180CC7A13238ED0E0994D6CC /* ContentView.swift */; };
+		28921BD41966792622F19879 /* ThingsContextStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8126F0EAD72D3D65A355420C /* ThingsContextStore.swift */; };
+		3F6CB064F2B0AA442F8E769B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7FB5E377FB8E9F562EAED7D5 /* FirebaseAuth */; };
+		426E732419E3C2C79BA7FFEA /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44724368B41EC50420DD424 /* AuthView.swift */; };
+		4C8B88B280D713FA87C8C219 /* ThingsContextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B472F6054C6D3498583B342B /* ThingsContextFormatter.swift */; };
+		58E5AEF181A0D7E7C64EE224 /* ThingsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9123AC3155C72EC4B37348D /* ThingsDatabase.swift */; };
 		78B9CA4A2393CF8AB9B1E469 /* EmberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC635EBE2AC3C4079688D51C /* EmberApp.swift */; };
+		7A9E93EDD327FBDEF61376B7 /* ThingsContextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B472F6054C6D3498583B342B /* ThingsContextFormatter.swift */; };
+		7AF8ECD6B08AED3DDAF3651C /* ThingsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4E79C24BF962EA8960F38A /* ThingsModels.swift */; };
 		7D78F2E708DC62068AC25272 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CCAECECB01C03E7C4363DCA5 /* Assets.xcassets */; };
+		8FACEA373A37080FF51616A2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11222E98A34227084D47620E /* main.swift */; };
+		99AF0C7EFBD350A052ED4ECC /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93543A2710D5CD67F8C07F95 /* AuthManager.swift */; };
+		9DE842E60D8520B8D025F16F /* FirebaseREST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA98484AEC403128D1DBDBE /* FirebaseREST.swift */; };
+		9EF4CF3204CBEC73C26CE1EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B3878671B1AEA5EB858912E /* GoogleService-Info.plist */; };
+		A26BE48BAD24D1DB367EAF18 /* FirebaseAILogic in Frameworks */ = {isa = PBXBuildFile; productRef = A97F9D8026BA7EEBEDDC38BA /* FirebaseAILogic */; };
+		A591C7B673A2AD8D6D57ECC4 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B410F11A016D0FE8D217AC12 /* ChatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		11222E98A34227084D47620E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		180CC7A13238ED0E0994D6CC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		6B3878671B1AEA5EB858912E /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist; lastKnownFileType = text.plist; name = "GoogleService-Info.plist"; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8126F0EAD72D3D65A355420C /* ThingsContextStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThingsContextStore.swift; sourceTree = "<group>"; };
+		8CA98484AEC403128D1DBDBE /* FirebaseREST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseREST.swift; sourceTree = "<group>"; };
+		93543A2710D5CD67F8C07F95 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		9506ABB3E54034795038295A /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		B410F11A016D0FE8D217AC12 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		B472F6054C6D3498583B342B /* ThingsContextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThingsContextFormatter.swift; sourceTree = "<group>"; };
+		C9123AC3155C72EC4B37348D /* ThingsDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThingsDatabase.swift; sourceTree = "<group>"; };
+		CB4E79C24BF962EA8960F38A /* ThingsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThingsModels.swift; sourceTree = "<group>"; };
 		CCAECECB01C03E7C4363DCA5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D1E129474145FB033E3BBB86 /* Ember.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Ember.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D44724368B41EC50420DD424 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		DC635EBE2AC3C4079688D51C /* EmberApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmberApp.swift; sourceTree = "<group>"; };
+		EBC49FAB8F14BA927485C8B0 /* EmberSync */ = {isa = PBXFileReference; includeInIndex = 0; path = EmberSync; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BB326CA5A71916D2515EA573 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0BD77B5E441B2A5EF34A037A /* FirebaseCore in Frameworks */,
+				3F6CB064F2B0AA442F8E769B /* FirebaseAuth in Frameworks */,
+				08D28716754270B134C2B86D /* FirebaseFirestore in Frameworks */,
+				A26BE48BAD24D1DB367EAF18 /* FirebaseAILogic in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		233CA52765D6C49205F221FF /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				D1E129474145FB033E3BBB86 /* Ember.app */,
+				EBC49FAB8F14BA927485C8B0 /* EmberSync */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -32,18 +76,45 @@
 			isa = PBXGroup;
 			children = (
 				CCAECECB01C03E7C4363DCA5 /* Assets.xcassets */,
+				93543A2710D5CD67F8C07F95 /* AuthManager.swift */,
+				D44724368B41EC50420DD424 /* AuthView.swift */,
+				B410F11A016D0FE8D217AC12 /* ChatView.swift */,
+				9506ABB3E54034795038295A /* ChatViewModel.swift */,
 				180CC7A13238ED0E0994D6CC /* ContentView.swift */,
 				DC635EBE2AC3C4079688D51C /* EmberApp.swift */,
+				8126F0EAD72D3D65A355420C /* ThingsContextStore.swift */,
+				6B3878671B1AEA5EB858912E /* GoogleService-Info.plist */,
 			);
 			path = Ember;
+			sourceTree = "<group>";
+		};
+		724526BE3B15B9C591570570 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B472F6054C6D3498583B342B /* ThingsContextFormatter.swift */,
+				CB4E79C24BF962EA8960F38A /* ThingsModels.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		BBC0B4313EBF53B16DC19257 = {
 			isa = PBXGroup;
 			children = (
 				56E6B0F7A59E63C82AB86141 /* Ember */,
+				E4D1EAED68540AB6BB3C6E0A /* EmberSync */,
+				724526BE3B15B9C591570570 /* Shared */,
 				233CA52765D6C49205F221FF /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		E4D1EAED68540AB6BB3C6E0A /* EmberSync */ = {
+			isa = PBXGroup;
+			children = (
+				8CA98484AEC403128D1DBDBE /* FirebaseREST.swift */,
+				11222E98A34227084D47620E /* main.swift */,
+				C9123AC3155C72EC4B37348D /* ThingsDatabase.swift */,
+			);
+			path = EmberSync;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,6 +126,7 @@
 			buildPhases = (
 				60A89B85028B91AE593FB976 /* Sources */,
 				8B6B0FFA7E15F621C34D6356 /* Resources */,
+				BB326CA5A71916D2515EA573 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -62,10 +134,31 @@
 			);
 			name = Ember;
 			packageProductDependencies = (
+				F2ACC2FC73360C9E1E69D6E9 /* FirebaseCore */,
+				7FB5E377FB8E9F562EAED7D5 /* FirebaseAuth */,
+				3B6DDB03149BE7351914469A /* FirebaseFirestore */,
+				A97F9D8026BA7EEBEDDC38BA /* FirebaseAILogic */,
 			);
 			productName = Ember;
 			productReference = D1E129474145FB033E3BBB86 /* Ember.app */;
 			productType = "com.apple.product-type.application";
+		};
+		F178ED872935B3459F81621B /* EmberSync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9CE54C09F11E2A56A7E1AF2 /* Build configuration list for PBXNativeTarget "EmberSync" */;
+			buildPhases = (
+				11071360F6A820AF21036F4E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EmberSync;
+			packageProductDependencies = (
+			);
+			productName = EmberSync;
+			productReference = EBC49FAB8F14BA927485C8B0 /* EmberSync */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -75,8 +168,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 8E26098F6346F3E7D139037F /* Build configuration list for PBXProject "Ember" */;
 			developmentRegion = en;
@@ -87,12 +178,16 @@
 			);
 			mainGroup = BBC0B4313EBF53B16DC19257;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				39AB687093CE34F01DEA0B39 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 233CA52765D6C49205F221FF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				3E853DD93E303CC86CD1FA7F /* Ember */,
+				F178ED872935B3459F81621B /* EmberSync */,
 			);
 		};
 /* End PBXProject section */
@@ -103,18 +198,38 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D78F2E708DC62068AC25272 /* Assets.xcassets in Resources */,
+				9EF4CF3204CBEC73C26CE1EE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		11071360F6A820AF21036F4E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DE842E60D8520B8D025F16F /* FirebaseREST.swift in Sources */,
+				7A9E93EDD327FBDEF61376B7 /* ThingsContextFormatter.swift in Sources */,
+				58E5AEF181A0D7E7C64EE224 /* ThingsDatabase.swift in Sources */,
+				7AF8ECD6B08AED3DDAF3651C /* ThingsModels.swift in Sources */,
+				8FACEA373A37080FF51616A2 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		60A89B85028B91AE593FB976 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99AF0C7EFBD350A052ED4ECC /* AuthManager.swift in Sources */,
+				426E732419E3C2C79BA7FFEA /* AuthView.swift in Sources */,
+				A591C7B673A2AD8D6D57ECC4 /* ChatView.swift in Sources */,
+				0136926E1AAB18629A07A145 /* ChatViewModel.swift in Sources */,
 				19C1900F961D51D3B9466316 /* ContentView.swift in Sources */,
 				78B9CA4A2393CF8AB9B1E469 /* EmberApp.swift in Sources */,
+				4C8B88B280D713FA87C8C219 /* ThingsContextFormatter.swift in Sources */,
+				28921BD41966792622F19879 /* ThingsContextStore.swift in Sources */,
+				054AA02987535C541A7E2AB6 /* ThingsModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +254,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited) -ObjC",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ember.app;
 				PRODUCT_NAME = Ember;
 				SDKROOT = iphoneos;
@@ -194,12 +313,32 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D72F93E29C65FA0F706A964E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ember.sync;
+				PRODUCT_NAME = "ember-sync";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -222,6 +361,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited) -ObjC",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ember.app;
 				PRODUCT_NAME = Ember;
 				SDKROOT = iphoneos;
@@ -283,13 +426,33 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F1B26CCA949DBF955F18503C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ember.sync;
+				PRODUCT_NAME = "ember-sync";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -315,7 +478,50 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		D9CE54C09F11E2A56A7E1AF2 /* Build configuration list for PBXNativeTarget "EmberSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1B26CCA949DBF955F18503C /* Debug */,
+				D72F93E29C65FA0F706A964E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		39AB687093CE34F01DEA0B39 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.18.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3B6DDB03149BE7351914469A /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39AB687093CE34F01DEA0B39 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		7FB5E377FB8E9F562EAED7D5 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39AB687093CE34F01DEA0B39 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		A97F9D8026BA7EEBEDDC38BA /* FirebaseAILogic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39AB687093CE34F01DEA0B39 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAILogic;
+		};
+		F2ACC2FC73360C9E1E69D6E9 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39AB687093CE34F01DEA0B39 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 60EE479878F0F38411A15B19 /* Project object */;
 }

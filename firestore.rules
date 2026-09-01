@@ -1,0 +1,130 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: Firebase Auth uid
+    //
+    // Document: users/{userId}/things/current
+    // Fields:
+    //   - markdown: string (required, 1-900000) - compact Things context for Gemini
+    //   - generatedAt: timestamp (required)
+    //   - syncedAt: timestamp (required)
+    //   - projectCount: int (required, 0-10000)
+    //   - taskCount: int (required, 0-100000)
+    //   - source: string (required, "seed" | "things3")
+    //
+    // Collection: users/{userId}/things/current/projects
+    // Document ID: Things project uuid
+    // Fields:
+    //   - uuid: string (required, must equal document ID)
+    //   - title: string (required, 1-500)
+    //   - notes: string (required, 0-20000)
+    //   - area: string|null (optional, 0-200)
+    //   - deadline: string|null (optional, YYYY-MM-DD)
+    //   - status: string (required, open|canceled|completed)
+    //   - modifiedAt: number|null (optional)
+    //
+    // Collection: users/{userId}/things/current/tasks
+    // Document ID: Things task uuid
+    // Fields:
+    //   - uuid: string (required, must equal document ID)
+    //   - title: string (required, 1-500)
+    //   - notes: string (required, 0-20000)
+    //   - projectId: string|null (optional)
+    //   - projectTitle: string|null (optional, 0-500)
+    //   - heading: string|null (optional, 0-500)
+    //   - deadline: string|null (optional, YYYY-MM-DD)
+    //   - startDate: string|null (optional, YYYY-MM-DD)
+    //   - status: string (required, open|canceled|completed)
+    //
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isOptionalDateString(data, field) {
+      return !(field in data) ||
+        data[field] == null ||
+        (data[field] is string && data[field].matches('^\\d{4}-\\d{2}-\\d{2}$'));
+    }
+
+    function isValidStatus(value) {
+      return value is string && value in ['open', 'canceled', 'completed'];
+    }
+
+    function isValidCurrent(data) {
+      return hasOnlyAllowedFields(['markdown', 'generatedAt', 'syncedAt', 'projectCount', 'taskCount', 'source']) &&
+        data.markdown is string && data.markdown.size() > 0 && data.markdown.size() < 900000 &&
+        data.generatedAt is timestamp &&
+        data.syncedAt is timestamp &&
+        data.projectCount is int && data.projectCount >= 0 && data.projectCount < 10000 &&
+        data.taskCount is int && data.taskCount >= 0 && data.taskCount < 100000 &&
+        data.source is string && data.source in ['seed', 'things3'];
+    }
+
+    function isValidProject(data) {
+      return hasOnlyAllowedFields(['uuid', 'title', 'notes', 'area', 'deadline', 'status', 'modifiedAt']) &&
+        data.uuid is string && data.uuid.size() > 0 && data.uuid.size() < 80 &&
+        data.title is string && data.title.size() > 0 && data.title.size() <= 500 &&
+        data.notes is string && data.notes.size() <= 20000 &&
+        isValidStatus(data.status) &&
+        (!( 'area' in data) || data.area == null || (data.area is string && data.area.size() <= 200)) &&
+        isOptionalDateString(data, 'deadline') &&
+        (!( 'modifiedAt' in data) || data.modifiedAt == null || data.modifiedAt is number);
+    }
+
+    function isValidTask(data) {
+      return hasOnlyAllowedFields(['uuid', 'title', 'notes', 'projectId', 'projectTitle', 'heading', 'deadline', 'startDate', 'status']) &&
+        data.uuid is string && data.uuid.size() > 0 && data.uuid.size() < 80 &&
+        data.title is string && data.title.size() > 0 && data.title.size() <= 500 &&
+        data.notes is string && data.notes.size() <= 20000 &&
+        isValidStatus(data.status) &&
+        (!( 'projectId' in data) || data.projectId == null || (data.projectId is string && data.projectId.size() < 80)) &&
+        (!( 'projectTitle' in data) || data.projectTitle == null || (data.projectTitle is string && data.projectTitle.size() <= 500)) &&
+        (!( 'heading' in data) || data.heading == null || (data.heading is string && data.heading.size() <= 500)) &&
+        isOptionalDateString(data, 'deadline') &&
+        isOptionalDateString(data, 'startDate');
+    }
+
+    match /users/{userId} {
+      allow read, write: if false;
+
+      match /things/current {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidCurrent(request.resource.data);
+        allow delete: if isOwner(userId);
+
+        match /projects/{projectId} {
+          allow read: if isOwner(userId);
+          allow create, update: if isOwner(userId) &&
+            isValidProject(request.resource.data) &&
+            request.resource.data.uuid == projectId;
+          allow delete: if isOwner(userId);
+        }
+
+        match /tasks/{taskId} {
+          allow read: if isOwner(userId);
+          allow create, update: if isOwner(userId) &&
+            isValidTask(request.resource.data) &&
+            request.resource.data.uuid == taskId;
+          allow delete: if isOwner(userId);
+        }
+      }
+    }
+  }
+}
