@@ -63,6 +63,9 @@ struct ThingsMeta: Codable, Equatable, Sendable {
     var projectCount: Int
     var taskCount: Int
     var source: String
+    /// SHA-256 of the markdown at last sync. Optional for backward compatibility
+    /// with documents written before change detection existed.
+    var contentHash: String?
 }
 
 struct ThingsContextDocument: Codable, Equatable, Sendable {
@@ -72,6 +75,8 @@ struct ThingsContextDocument: Codable, Equatable, Sendable {
     var projectCount: Int
     var taskCount: Int
     var source: String
+    /// SHA-256 of `markdown`. Used to skip no-op Firestore writes.
+    var contentHash: String?
 }
 
 enum ThingsDate {
@@ -97,6 +102,7 @@ enum FirestorePaths {
     static func task(uid: String, uuid: String) -> String { "users/\(uid)/things/current/tasks/\(uuid)" }
     static func projectsCollection(uid: String) -> String { "users/\(uid)/things/current/projects" }
     static func tasksCollection(uid: String) -> String { "users/\(uid)/things/current/tasks" }
+    static func profile(uid: String) -> String { "users/\(uid)/profile/current" }
 }
 
 enum SeedFixture {

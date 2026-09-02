@@ -25,9 +25,16 @@ enum KnowledgeModule: String, CaseIterable {
             withExtension: "md",
             subdirectory: resourceSubdirectory
         ) else {
+            assertionFailure(
+                "KnowledgeModule: \(resourceName).md is not bundled — check project.yml Context folder reference."
+            )
             return "# \(resourceName)\n\n(Missing bundled context file.)"
         }
-        return (try? String(contentsOf: url, encoding: .utf8)) ?? ""
+        guard let contents = try? String(contentsOf: url, encoding: .utf8) else {
+            assertionFailure("KnowledgeModule: \(resourceName).md exists but could not be read as UTF-8.")
+            return ""
+        }
+        return contents
     }
 
     static var coachingGuidelinesMarkdown: String {

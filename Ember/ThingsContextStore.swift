@@ -38,7 +38,8 @@ final class ThingsContextStore {
                     syncedAt: loaded.syncedAt,
                     projectCount: loaded.projectCount,
                     taskCount: loaded.taskCount,
-                    source: loaded.source
+                    source: loaded.source,
+                    contentHash: loaded.contentHash
                 )
             } else {
                 markdown = ""
@@ -85,7 +86,8 @@ final class ThingsContextStore {
             syncedAt: now,
             projectCount: snapshot.projects.count,
             taskCount: snapshot.tasks.count,
-            source: "seed"
+            source: "seed",
+            contentHash: ContentHash.sha256Hex(ThingsContextFormatter.contentHashInput(from: snapshot))
         )
         try currentRef.setData(from: record)
         if let project = snapshot.projects.first {

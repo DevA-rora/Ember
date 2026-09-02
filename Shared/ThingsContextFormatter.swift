@@ -6,6 +6,18 @@ enum ThingsContextFormatter {
         lines.append("# Current Things 3 work")
         lines.append("")
         lines.append("Generated: \(iso(snapshot.generatedAt))")
+        lines.append(contentsOf: body(from: snapshot))
+        return lines.joined(separator: "\n")
+    }
+
+    /// Same content as `markdown(from:)` but without the `Generated:` timestamp,
+    /// so change detection (content hashing) isn't defeated by the clock alone.
+    static func contentHashInput(from snapshot: ThingsSnapshot) -> String {
+        body(from: snapshot).joined(separator: "\n")
+    }
+
+    private static func body(from snapshot: ThingsSnapshot) -> [String] {
+        var lines: [String] = []
         lines.append("Open projects: \(snapshot.projects.count). Open tasks: \(snapshot.tasks.count).")
         lines.append("Use this as the source of truth for what the user is working on, including titles, notes, and deadlines.")
         lines.append("")
@@ -96,7 +108,7 @@ enum ThingsContextFormatter {
             }
         }
 
-        return lines.joined(separator: "\n")
+        return lines
     }
 
     private static func taskBullet(_ task: ThingsTask, indent: Int) -> [String] {

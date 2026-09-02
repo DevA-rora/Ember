@@ -14,7 +14,9 @@ ember-sync — copy open Things 3 projects/tasks into Firestore
 Usage:
   ember-sync login [--email ADDRESS]   Sign in (same Firebase account as the iOS app)
   ember-sync --dry-run                 Print open projects, notes, and deadlines (no network)
-  ember-sync                           Upsert the current Things snapshot to Firestore
+  ember-sync --suggest                 Print the top ranked task suggestions (no network)
+  ember-sync                           Upsert the current Things snapshot to Firestore (skips if unchanged)
+  ember-sync --force                   Upsert even if the content hash matches the last sync
 
 Login also accepts environment variables (useful in Cursor/VS Code terminals):
   EMBER_EMAIL=you@example.com EMBER_PASSWORD=secret ember-sync login
@@ -31,7 +33,11 @@ private func run(arguments: [String]) async throws {
         return
     }
 
+    print("ember-sync build: \(buildStamp())")
+
     let dryRun = arguments.contains("--dry-run")
+    let suggest = arguments.contains("--suggest")
+    let force = arguments.contains("--force")
     let snapshot = try ThingsDatabase.loadSnapshot()
     print("Read \(snapshot.projects.count) open projects and \(snapshot.tasks.count) open tasks from Things 3.")
 
@@ -40,10 +46,49 @@ private func run(arguments: [String]) async throws {
         return
     }
 
+    if suggest {
+        printSuggestions(from: snapshot)
+        return
+    }
+
     let credentials = try EmberConfig.loadCredentials()
     let session = try await FirebaseREST.signIn(credentials: credentials)
-    try await FirebaseREST.upsertSnapshot(credentials: credentials, session: session, snapshot: snapshot)
-    print("Upserted Things snapshot for uid \(session.localId).")
+    let wrote = try await FirebaseREST.upsertSnapshot(
+        credentials: credentials,
+        session: session,
+        snapshot: snapshot,
+        force: force
+    )
+    if wrote {
+        print("Upserted Things snapshot for uid \(session.localId).")
+    } else {
+        print("No changes since last sync for uid \(session.localId) — skipped write.")
+    }
+}
+
+private func printSuggestions(from snapshot: ThingsSnapshot) {
+    let candidates = TaskSuggester.rankedCandidates(from: snapshot, limit: 5)
+    guard !candidates.isEmpty else {
+        print("No open (non-Someday) tasks to suggest.")
+        return
+    }
+    print("Top task suggestions:")
+    for (index, candidate) in candidates.enumerated() {
+        let project = candidate.task.projectTitle.map { " (\($0))" } ?? ""
+        print("\(index + 1). [\(candidate.tier)] \(candidate.task.title)\(project) — \(candidate.reason)")
+    }
+}
+
+/// Identifies which build produced this binary, so a stale `~/.local/bin/ember-sync`
+/// copy (installed by install-watchpaths.sh) can be spotted in logs.
+private func buildStamp() -> String {
+    guard let path = Bundle.main.executablePath ?? CommandLine.arguments.first,
+          let attrs = try? FileManager.default.attributesOfItem(atPath: path),
+          let modified = attrs[.modificationDate] as? Date
+    else {
+        return "unknown"
+    }
+    return ISO8601DateFormatter().string(from: modified)
 }
 
 private func login(arguments: [String]) async throws {

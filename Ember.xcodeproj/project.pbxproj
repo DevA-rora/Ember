@@ -11,61 +11,68 @@
 		054AA02987535C541A7E2AB6 /* ThingsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4E79C24BF962EA8960F38A /* ThingsModels.swift */; };
 		08D28716754270B134C2B86D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3B6DDB03149BE7351914469A /* FirebaseFirestore */; };
 		0BD77B5E441B2A5EF34A037A /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F2ACC2FC73360C9E1E69D6E9 /* FirebaseCore */; };
-		0C1526DBE50F81FB8C0A3F26 /* coaching-guidelines.md in Resources */ = {isa = PBXBuildFile; fileRef = 1A0DAF4D8B7F7F1AFA70F983 /* coaching-guidelines.md */; };
+		134E9F3F2D777300B3F6D354 /* ContentHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBF11E7E325522787FEF501 /* ContentHash.swift */; };
 		13A82355584B7CD876A74633 /* KnowledgeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E5BE17238FC1E54B1915AB /* KnowledgeModule.swift */; };
-		1833AFB134ADAAF50354BCB6 /* adhd-strategies.md in Resources */ = {isa = PBXBuildFile; fileRef = DEA790655121FADA2D6898BF /* adhd-strategies.md */; };
+		166BC820C3E38FF0F0FCA3C7 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F69A40A47B5492E84F08D6 /* UserProfile.swift */; };
 		19C1900F961D51D3B9466316 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180CC7A13238ED0E0994D6CC /* ContentView.swift */; };
-		1FF3118F6E0D1D25C499C9B7 /* teen-low-energy.md in Resources */ = {isa = PBXBuildFile; fileRef = B5130C8C621B64E25F062632 /* teen-low-energy.md */; };
 		28921BD41966792622F19879 /* ThingsContextStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8126F0EAD72D3D65A355420C /* ThingsContextStore.swift */; };
 		2A7BED0EB9D2C88E7ED7A019 /* CalendarFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDBFC3BCB3E36FB18ECB4F8 /* CalendarFixture.swift */; };
 		3382787562778CA7720D5582 /* SessionMemoryFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7C9737C007A67FCF597214 /* SessionMemoryFixture.swift */; };
-		34EFD26434BDF38AA4972036 /* psychology-basics.md in Resources */ = {isa = PBXBuildFile; fileRef = 08C780487C22B6B20D33855F /* psychology-basics.md */; };
 		3F6CB064F2B0AA442F8E769B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7FB5E377FB8E9F562EAED7D5 /* FirebaseAuth */; };
 		426E732419E3C2C79BA7FFEA /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44724368B41EC50420DD424 /* AuthView.swift */; };
+		482847FED2A452268B9BE97D /* NamePromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556512B28E63B1847554875B /* NamePromptView.swift */; };
+		49ADCF0A314233E39EF49D83 /* TaskSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213C0E39598CC902B2BB305A /* TaskSuggester.swift */; };
 		4C8B88B280D713FA87C8C219 /* ThingsContextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B472F6054C6D3498583B342B /* ThingsContextFormatter.swift */; };
+		5354C70F6E267915388C8FAE /* EmberContextAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AA61B800B33CCEC721EFC9 /* EmberContextAssembler.swift */; };
 		58E5AEF181A0D7E7C64EE224 /* ThingsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9123AC3155C72EC4B37348D /* ThingsDatabase.swift */; };
 		5D858F10588B7765F9B47A17 /* KnowledgeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E5BE17238FC1E54B1915AB /* KnowledgeModule.swift */; };
 		78B9CA4A2393CF8AB9B1E469 /* EmberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC635EBE2AC3C4079688D51C /* EmberApp.swift */; };
+		78D7EEF0B6BC5B32FB95783E /* UserProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53463695CB64D05787C0F99A /* UserProfileStore.swift */; };
 		7A9E93EDD327FBDEF61376B7 /* ThingsContextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B472F6054C6D3498583B342B /* ThingsContextFormatter.swift */; };
 		7AF8ECD6B08AED3DDAF3651C /* ThingsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4E79C24BF962EA8960F38A /* ThingsModels.swift */; };
 		7D78F2E708DC62068AC25272 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CCAECECB01C03E7C4363DCA5 /* Assets.xcassets */; };
 		8FACEA373A37080FF51616A2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11222E98A34227084D47620E /* main.swift */; };
-		95631ACC8AD7197A30D41180 /* executive-dysfunction.md in Resources */ = {isa = PBXBuildFile; fileRef = CFCDD0431AAE0E6E34B21E60 /* executive-dysfunction.md */; };
 		99AF0C7EFBD350A052ED4ECC /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93543A2710D5CD67F8C07F95 /* AuthManager.swift */; };
 		9DE842E60D8520B8D025F16F /* FirebaseREST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA98484AEC403128D1DBDBE /* FirebaseREST.swift */; };
 		9EF4CF3204CBEC73C26CE1EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B3878671B1AEA5EB858912E /* GoogleService-Info.plist */; };
+		A04F0006FC714CBDC59230C1 /* ContentHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBF11E7E325522787FEF501 /* ContentHash.swift */; };
 		A26BE48BAD24D1DB367EAF18 /* FirebaseAILogic in Frameworks */ = {isa = PBXBuildFile; productRef = A97F9D8026BA7EEBEDDC38BA /* FirebaseAILogic */; };
+		A3FD9769E909E5C09905176C /* Context in Resources */ = {isa = PBXBuildFile; fileRef = 2F1BBF39EEEAE2684CB0582B /* Context */; };
 		A591C7B673A2AD8D6D57ECC4 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B410F11A016D0FE8D217AC12 /* ChatView.swift */; };
-		CF693E5E37D9AA6502EB26A8 /* asd-routines.md in Resources */ = {isa = PBXBuildFile; fileRef = 2223E1CB979C69F777663A37 /* asd-routines.md */; };
+		B5F04CC24F4B0C25A80645EA /* EmberContextAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AA61B800B33CCEC721EFC9 /* EmberContextAssembler.swift */; };
+		C8A0B265D031DCC117CA39FC /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F69A40A47B5492E84F08D6 /* UserProfile.swift */; };
 		D094D96B949B82652D6C147B /* SessionMemoryFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7C9737C007A67FCF597214 /* SessionMemoryFixture.swift */; };
 		E7F05EB67E1BA0D766E2735E /* CalendarFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDBFC3BCB3E36FB18ECB4F8 /* CalendarFixture.swift */; };
+		EF16B39EBA427D9D064CE4E9 /* TaskSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213C0E39598CC902B2BB305A /* TaskSuggester.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		08C780487C22B6B20D33855F /* psychology-basics.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "psychology-basics.md"; sourceTree = "<group>"; };
 		11222E98A34227084D47620E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		180CC7A13238ED0E0994D6CC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		1A0DAF4D8B7F7F1AFA70F983 /* coaching-guidelines.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "coaching-guidelines.md"; sourceTree = "<group>"; };
-		2223E1CB979C69F777663A37 /* asd-routines.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "asd-routines.md"; sourceTree = "<group>"; };
+		213C0E39598CC902B2BB305A /* TaskSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSuggester.swift; sourceTree = "<group>"; };
+		2F1BBF39EEEAE2684CB0582B /* Context */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Context; path = Shared/Context; sourceTree = SOURCE_ROOT; };
+		53463695CB64D05787C0F99A /* UserProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileStore.swift; sourceTree = "<group>"; };
+		556512B28E63B1847554875B /* NamePromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePromptView.swift; sourceTree = "<group>"; };
 		6B3878671B1AEA5EB858912E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		70E5BE17238FC1E54B1915AB /* KnowledgeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeModule.swift; sourceTree = "<group>"; };
+		738C57AD4865B9D8A9B2012D /* Ember.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Ember.entitlements; sourceTree = "<group>"; };
 		7A7C9737C007A67FCF597214 /* SessionMemoryFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMemoryFixture.swift; sourceTree = "<group>"; };
+		7BBF11E7E325522787FEF501 /* ContentHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentHash.swift; sourceTree = "<group>"; };
 		8126F0EAD72D3D65A355420C /* ThingsContextStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThingsContextStore.swift; sourceTree = "<group>"; };
 		8CA98484AEC403128D1DBDBE /* FirebaseREST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseREST.swift; sourceTree = "<group>"; };
 		93543A2710D5CD67F8C07F95 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		9506ABB3E54034795038295A /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		9FDBFC3BCB3E36FB18ECB4F8 /* CalendarFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarFixture.swift; sourceTree = "<group>"; };
+		A7AA61B800B33CCEC721EFC9 /* EmberContextAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmberContextAssembler.swift; sourceTree = "<group>"; };
 		B410F11A016D0FE8D217AC12 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		B472F6054C6D3498583B342B /* ThingsContextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThingsContextFormatter.swift; sourceTree = "<group>"; };
-		B5130C8C621B64E25F062632 /* teen-low-energy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "teen-low-energy.md"; sourceTree = "<group>"; };
 		C9123AC3155C72EC4B37348D /* ThingsDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThingsDatabase.swift; sourceTree = "<group>"; };
 		CB4E79C24BF962EA8960F38A /* ThingsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThingsModels.swift; sourceTree = "<group>"; };
 		CCAECECB01C03E7C4363DCA5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		CFCDD0431AAE0E6E34B21E60 /* executive-dysfunction.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "executive-dysfunction.md"; sourceTree = "<group>"; };
 		D1E129474145FB033E3BBB86 /* Ember.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Ember.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D44724368B41EC50420DD424 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		DC635EBE2AC3C4079688D51C /* EmberApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmberApp.swift; sourceTree = "<group>"; };
-		DEA790655121FADA2D6898BF /* adhd-strategies.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "adhd-strategies.md"; sourceTree = "<group>"; };
+		E7F69A40A47B5492E84F08D6 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		EBC49FAB8F14BA927485C8B0 /* EmberSync */ = {isa = PBXFileReference; includeInIndex = 0; path = EmberSync; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -93,18 +100,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		32CCE2A72038BAA0DE0A1AFE /* knowledge */ = {
-			isa = PBXGroup;
-			children = (
-				DEA790655121FADA2D6898BF /* adhd-strategies.md */,
-				2223E1CB979C69F777663A37 /* asd-routines.md */,
-				CFCDD0431AAE0E6E34B21E60 /* executive-dysfunction.md */,
-				08C780487C22B6B20D33855F /* psychology-basics.md */,
-				B5130C8C621B64E25F062632 /* teen-low-energy.md */,
-			);
-			path = knowledge;
-			sourceTree = "<group>";
-		};
 		56E6B0F7A59E63C82AB86141 /* Ember */ = {
 			isa = PBXGroup;
 			children = (
@@ -114,9 +109,12 @@
 				B410F11A016D0FE8D217AC12 /* ChatView.swift */,
 				9506ABB3E54034795038295A /* ChatViewModel.swift */,
 				180CC7A13238ED0E0994D6CC /* ContentView.swift */,
+				738C57AD4865B9D8A9B2012D /* Ember.entitlements */,
 				DC635EBE2AC3C4079688D51C /* EmberApp.swift */,
 				6B3878671B1AEA5EB858912E /* GoogleService-Info.plist */,
+				556512B28E63B1847554875B /* NamePromptView.swift */,
 				8126F0EAD72D3D65A355420C /* ThingsContextStore.swift */,
+				53463695CB64D05787C0F99A /* UserProfileStore.swift */,
 			);
 			path = Ember;
 			sourceTree = "<group>";
@@ -125,22 +123,17 @@
 			isa = PBXGroup;
 			children = (
 				9FDBFC3BCB3E36FB18ECB4F8 /* CalendarFixture.swift */,
+				7BBF11E7E325522787FEF501 /* ContentHash.swift */,
+				2F1BBF39EEEAE2684CB0582B /* Context */,
+				A7AA61B800B33CCEC721EFC9 /* EmberContextAssembler.swift */,
 				70E5BE17238FC1E54B1915AB /* KnowledgeModule.swift */,
 				7A7C9737C007A67FCF597214 /* SessionMemoryFixture.swift */,
+				213C0E39598CC902B2BB305A /* TaskSuggester.swift */,
 				B472F6054C6D3498583B342B /* ThingsContextFormatter.swift */,
 				CB4E79C24BF962EA8960F38A /* ThingsModels.swift */,
-				B98C2CCC7C310BB0205EF3DB /* Context */,
+				E7F69A40A47B5492E84F08D6 /* UserProfile.swift */,
 			);
 			path = Shared;
-			sourceTree = "<group>";
-		};
-		B98C2CCC7C310BB0205EF3DB /* Context */ = {
-			isa = PBXGroup;
-			children = (
-				1A0DAF4D8B7F7F1AFA70F983 /* coaching-guidelines.md */,
-				32CCE2A72038BAA0DE0A1AFE /* knowledge */,
-			);
-			path = Context;
 			sourceTree = "<group>";
 		};
 		BBC0B4313EBF53B16DC19257 = {
@@ -194,7 +187,6 @@
 			buildConfigurationList = D9CE54C09F11E2A56A7E1AF2 /* Build configuration list for PBXNativeTarget "EmberSync" */;
 			buildPhases = (
 				11071360F6A820AF21036F4E /* Sources */,
-				388542BC9C833E8DA1F020D6 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -242,24 +234,12 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		388542BC9C833E8DA1F020D6 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1833AFB134ADAAF50354BCB6 /* adhd-strategies.md in Resources */,
-				CF693E5E37D9AA6502EB26A8 /* asd-routines.md in Resources */,
-				0C1526DBE50F81FB8C0A3F26 /* coaching-guidelines.md in Resources */,
-				95631ACC8AD7197A30D41180 /* executive-dysfunction.md in Resources */,
-				34EFD26434BDF38AA4972036 /* psychology-basics.md in Resources */,
-				1FF3118F6E0D1D25C499C9B7 /* teen-low-energy.md in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8B6B0FFA7E15F621C34D6356 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				7D78F2E708DC62068AC25272 /* Assets.xcassets in Resources */,
+				A3FD9769E909E5C09905176C /* Context in Resources */,
 				9EF4CF3204CBEC73C26CE1EE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -272,12 +252,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7F05EB67E1BA0D766E2735E /* CalendarFixture.swift in Sources */,
+				134E9F3F2D777300B3F6D354 /* ContentHash.swift in Sources */,
+				B5F04CC24F4B0C25A80645EA /* EmberContextAssembler.swift in Sources */,
 				9DE842E60D8520B8D025F16F /* FirebaseREST.swift in Sources */,
 				5D858F10588B7765F9B47A17 /* KnowledgeModule.swift in Sources */,
 				3382787562778CA7720D5582 /* SessionMemoryFixture.swift in Sources */,
+				EF16B39EBA427D9D064CE4E9 /* TaskSuggester.swift in Sources */,
 				7A9E93EDD327FBDEF61376B7 /* ThingsContextFormatter.swift in Sources */,
 				58E5AEF181A0D7E7C64EE224 /* ThingsDatabase.swift in Sources */,
 				7AF8ECD6B08AED3DDAF3651C /* ThingsModels.swift in Sources */,
+				C8A0B265D031DCC117CA39FC /* UserProfile.swift in Sources */,
 				8FACEA373A37080FF51616A2 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -291,13 +275,19 @@
 				2A7BED0EB9D2C88E7ED7A019 /* CalendarFixture.swift in Sources */,
 				A591C7B673A2AD8D6D57ECC4 /* ChatView.swift in Sources */,
 				0136926E1AAB18629A07A145 /* ChatViewModel.swift in Sources */,
+				A04F0006FC714CBDC59230C1 /* ContentHash.swift in Sources */,
 				19C1900F961D51D3B9466316 /* ContentView.swift in Sources */,
 				78B9CA4A2393CF8AB9B1E469 /* EmberApp.swift in Sources */,
+				5354C70F6E267915388C8FAE /* EmberContextAssembler.swift in Sources */,
 				13A82355584B7CD876A74633 /* KnowledgeModule.swift in Sources */,
+				482847FED2A452268B9BE97D /* NamePromptView.swift in Sources */,
 				D094D96B949B82652D6C147B /* SessionMemoryFixture.swift in Sources */,
+				49ADCF0A314233E39EF49D83 /* TaskSuggester.swift in Sources */,
 				4C8B88B280D713FA87C8C219 /* ThingsContextFormatter.swift in Sources */,
 				28921BD41966792622F19879 /* ThingsContextStore.swift in Sources */,
 				054AA02987535C541A7E2AB6 /* ThingsModels.swift in Sources */,
+				166BC820C3E38FF0F0FCA3C7 /* UserProfile.swift in Sources */,
+				78D7EEF0B6BC5B32FB95783E /* UserProfileStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,10 +299,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = YES;
 				CODE_SIGN_ENTITLEMENTS = Ember/Ember.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphonesimulator*]" = "-";
-				CODE_SIGNING_ALLOWED = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -415,10 +405,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = YES;
 				CODE_SIGN_ENTITLEMENTS = Ember/Ember.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphonesimulator*]" = "-";
-				CODE_SIGNING_ALLOWED = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

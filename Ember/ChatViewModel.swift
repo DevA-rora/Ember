@@ -24,7 +24,10 @@ final class ChatViewModel {
     private var chat: Chat?
     private var contextFingerprint: String = ""
 
-    func send(contextMarkdown: String) async {
+    /// `systemInstruction` should be the full string from `EmberContextAssembler`,
+    /// not just the Things markdown — fingerprinting the whole thing means any
+    /// layer changing (knowledge, memory, calendar, suggestion) invalidates the chat.
+    func send(systemInstruction: String) async {
         let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty, !isThinking else { return }
         input = ""
@@ -34,7 +37,7 @@ final class ChatViewModel {
         defer { isThinking = false }
 
         do {
-            try ensureChat(contextMarkdown: contextMarkdown)
+            try ensureChat(systemInstruction: systemInstruction)
             guard let chat else { return }
             let response = try await chat.sendMessage(trimmed)
             let text = response.text?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
@@ -52,20 +55,12 @@ final class ChatViewModel {
         errorMessage = nil
     }
 
-    private func ensureChat(contextMarkdown: String) throws {
-        if chat != nil, contextFingerprint == contextMarkdown { return }
-        contextFingerprint = contextMarkdown
-        let instruction = """
-        You are Ember, a personal work assistant.
-        Answer using the user's current Things 3 projects, tasks, notes, and deadlines below.
-        If something is missing from the context, say so instead of inventing tasks.
-        Prefer concise, concrete answers that cite project/task titles and dates.
-
-        \(contextMarkdown)
-        """
+    private func ensureChat(systemInstruction: String) throws {
+        if chat != nil, contextFingerprint == systemInstruction { return }
+        contextFingerprint = systemInstruction
         let model = FirebaseAI.firebaseAI().generativeModel(
             modelName: "gemini-flash-latest",
-            systemInstruction: ModelContent(role: "system", parts: instruction)
+            systemInstruction: ModelContent(role: "system", parts: systemInstruction)
         )
         chat = model.startChat()
     }

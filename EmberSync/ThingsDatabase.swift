@@ -45,11 +45,13 @@ enum ThingsDatabase {
             try fm.createDirectory(at: dir, withIntermediateDirectories: true)
             let dest = dir.appendingPathComponent("main.sqlite")
             try fm.copyItem(at: source, to: dest)
-            for suffix in ["-wal", "-shm"] {
-                let sidecar = URL(fileURLWithPath: source.path + suffix)
-                if fm.fileExists(atPath: sidecar.path) {
-                    try fm.copyItem(at: sidecar, to: URL(fileURLWithPath: dest.path + suffix))
-                }
+            // Copy only the WAL, never the -shm sidecar: `-shm` is the shared-memory
+            // WAL index and can go stale relative to a fresh `-wal`, causing SQLite
+            // to trust an out-of-date snapshot. SQLite 3.22+ supports opening a WAL
+            // database read-only without a `-shm` file — it scans the WAL directly.
+            let walSource = URL(fileURLWithPath: source.path + "-wal")
+            if fm.fileExists(atPath: walSource.path) {
+                try fm.copyItem(at: walSource, to: URL(fileURLWithPath: dest.path + "-wal"))
             }
             return dest
         } catch {
@@ -64,6 +66,8 @@ enum ThingsDatabase {
             throw ThingsDatabaseError.openFailed(String(cString: sqlite3_errmsg(db)))
         }
         defer { sqlite3_close(db) }
+
+        try quickCheck(db)
 
         let sql = """
         SELECT
@@ -164,5 +168,26 @@ enum ThingsDatabase {
     private static func columnText(_ statement: OpaquePointer, _ index: Int32) -> String {
         guard let pointer = sqlite3_column_text(statement, index) else { return "" }
         return String(cString: pointer)
+    }
+
+    /// Runs `PRAGMA quick_check` on the copy before trusting it. Catches corruption
+    /// from an interrupted copy (e.g. Things writing mid-copy) without the cost of
+    /// a full `PRAGMA integrity_check`.
+    private static func quickCheck(_ db: OpaquePointer) throws {
+        var statement: OpaquePointer?
+        guard sqlite3_prepare_v2(db, "PRAGMA quick_check;", -1, &statement, nil) == SQLITE_OK, let statement else {
+            throw ThingsDatabaseError.queryFailed(String(cString: sqlite3_errmsg(db)))
+        }
+        defer { sqlite3_finalize(statement) }
+
+        var results: [String] = []
+        while sqlite3_step(statement) == SQLITE_ROW {
+            results.append(columnText(statement, 0))
+        }
+        guard results == ["ok"] else {
+            throw ThingsDatabaseError.queryFailed(
+                "quick_check failed on copied database: \(results.joined(separator: "; "))"
+            )
+        }
     }
 }

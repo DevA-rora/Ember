@@ -16,6 +16,7 @@ service cloud.firestore {
     //   - projectCount: int (required, 0-10000)
     //   - taskCount: int (required, 0-100000)
     //   - source: string (required, "seed" | "things3")
+    //   - contentHash: string|null (optional, 64-char lowercase hex SHA-256 of markdown)
     //
     // Collection: users/{userId}/things/current/projects
     // Document ID: Things project uuid
@@ -40,6 +41,10 @@ service cloud.firestore {
     //   - deadline: string|null (optional, YYYY-MM-DD)
     //   - startDate: string|null (optional, YYYY-MM-DD)
     //   - status: string (required, open|canceled|completed)
+    //
+    // Document: users/{userId}/profile/current
+    // Fields:
+    //   - displayName: string (required, 1-80)
     //
     // ===============================================================
     // Helper Functions
@@ -67,14 +72,21 @@ service cloud.firestore {
       return value is string && value in ['open', 'canceled', 'completed'];
     }
 
+    function isOptionalHexHash(data, field) {
+      return !(field in data) ||
+        data[field] == null ||
+        (data[field] is string && data[field].matches('^[0-9a-f]{64}$'));
+    }
+
     function isValidCurrent(data) {
-      return hasOnlyAllowedFields(['markdown', 'generatedAt', 'syncedAt', 'projectCount', 'taskCount', 'source']) &&
+      return hasOnlyAllowedFields(['markdown', 'generatedAt', 'syncedAt', 'projectCount', 'taskCount', 'source', 'contentHash']) &&
         data.markdown is string && data.markdown.size() > 0 && data.markdown.size() < 900000 &&
         data.generatedAt is timestamp &&
         data.syncedAt is timestamp &&
         data.projectCount is int && data.projectCount >= 0 && data.projectCount < 10000 &&
         data.taskCount is int && data.taskCount >= 0 && data.taskCount < 100000 &&
-        data.source is string && data.source in ['seed', 'things3'];
+        data.source is string && data.source in ['seed', 'things3'] &&
+        isOptionalHexHash(data, 'contentHash');
     }
 
     function isValidProject(data) {
@@ -104,6 +116,11 @@ service cloud.firestore {
         (!( 'start' in data) || (data.start is int && data.start >= 0 && data.start <= 2));
     }
 
+    function isValidProfile(data) {
+      return hasOnlyAllowedFields(['displayName']) &&
+        data.displayName is string && data.displayName.size() > 0 && data.displayName.size() <= 80;
+    }
+
     match /users/{userId} {
       allow read, write: if false;
 
@@ -127,6 +144,12 @@ service cloud.firestore {
             request.resource.data.uuid == taskId;
           allow delete: if isOwner(userId);
         }
+      }
+
+      match /profile/current {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidProfile(request.resource.data);
+        allow delete: if isOwner(userId);
       }
     }
   }

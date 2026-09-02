@@ -20,9 +20,10 @@ targets:
       - path: Ember
       - path: Shared
         excludes:
-          - Context/**
-    resources:
-      - Shared/Context
+          - Context
+      - path: Shared/Context
+        type: folder
+        buildPhase: resources
     dependencies:
       - package: firebase-ios-sdk
         product: FirebaseCore
@@ -57,8 +58,10 @@ targets:
     type: tool
     platform: macOS
     sources:
-      - EmberSync
-      - Shared
+      - path: EmberSync
+      - path: Shared
+        excludes:
+          - Context
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ember.sync

@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+source "${ROOT}/scripts/lib/ensure-signing-identity.sh"
 HOME_DIR="${HOME}"
 BIN_DIR="${HOME_DIR}/.local/bin"
 BIN="${BIN_DIR}/ember-sync"
@@ -24,6 +25,12 @@ fi
 cp "${PRODUCT}" "${BIN}"
 chmod +x "${BIN}"
 
+ensure_ember_sync_signing_identity
+echo "Signing ember-sync with '${EMBER_SIGN_IDENTITY}' (stable identity — avoids repeated"
+echo "'access data from other apps' prompts across rebuilds)..."
+codesign --force --sign "${EMBER_SIGN_IDENTITY}" --identifier com.ember.sync "${BIN}"
+codesign -dvvv "${BIN}" 2>&1 | grep -E "Identifier|Authority" || true
+
 sed \
   -e "s|__EMBER_SYNC_BIN__|${BIN}|g" \
   -e "s|__EMBER_REPO__|${ROOT}|g" \
@@ -41,3 +48,9 @@ echo "Binary: ${BIN}"
 echo "Plist:  ${PLIST_DST}"
 echo "Log:    ${HOME_DIR}/Library/Logs/ember-sync.log"
 echo "Sign in first with: ${BIN} login"
+echo ""
+echo "If macOS still prompts \"ember-sync would like to access data from other apps\","
+echo "grant it once and for all via:"
+echo "  System Settings → Privacy & Security → Full Disk Access → \"+\" → add ${BIN}"
+echo "(Full Disk Access is a persistent grant; the AppData popup's 'Allow' is not"
+echo "reliably persisted for background/launchd-triggered runs.)"

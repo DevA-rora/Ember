@@ -107,12 +107,29 @@ enum FirebaseREST {
         )
     }
 
+    /// Upserts the snapshot to Firestore. Returns `false` without writing anything
+    /// if the markdown content hash matches what's already stored (unless `force`).
+    @discardableResult
     static func upsertSnapshot(
         credentials: EmberCredentials,
         session: FirebaseAuthSession,
-        snapshot: ThingsSnapshot
-    ) async throws {
+        snapshot: ThingsSnapshot,
+        force: Bool = false
+    ) async throws -> Bool {
         let markdown = ThingsContextFormatter.markdown(from: snapshot)
+        let contentHash = ContentHash.sha256Hex(ThingsContextFormatter.contentHashInput(from: snapshot))
+
+        if !force {
+            let existingHash = try await fetchCurrentContentHash(
+                projectId: credentials.projectId,
+                token: session.idToken,
+                uid: session.localId
+            )
+            if let existingHash, existingHash == contentHash {
+                return false
+            }
+        }
+
         let now = ISO8601DateFormatter().string(from: snapshot.generatedAt)
         var writes: [[String: Any]] = []
 
@@ -125,7 +142,8 @@ enum FirebaseREST {
                     "syncedAt": timestamp(now),
                     "projectCount": integer(snapshot.projects.count),
                     "taskCount": integer(snapshot.tasks.count),
-                    "source": string("things3")
+                    "source": string("things3"),
+                    "contentHash": string(contentHash)
                 ]
             )
         )
@@ -172,6 +190,26 @@ enum FirebaseREST {
         )
         if prunedProjects > 0 || prunedTasks > 0 {
             print("Pruned \(prunedProjects) stale project(s) and \(prunedTasks) stale task(s) from Firestore.")
+        }
+        return true
+    }
+
+    /// Returns the stored `contentHash` for the current doc, or `nil` if the
+    /// document doesn't exist yet or has no hash (pre-change-detection docs).
+    private static func fetchCurrentContentHash(
+        projectId: String,
+        token: String,
+        uid: String
+    ) async throws -> String? {
+        let url = URL(
+            string: "https://firestore.googleapis.com/v1/projects/\(projectId)/databases/(default)/documents/\(FirestorePaths.current(uid: uid))"
+        )!
+        do {
+            let json = try await getJSON(url: url, bearer: token)
+            let fields = json["fields"] as? [String: Any]
+            return (fields?["contentHash"] as? [String: Any])?["stringValue"] as? String
+        } catch FirebaseRESTError.http(404, _) {
+            return nil
         }
     }
 

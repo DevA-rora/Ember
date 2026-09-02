@@ -8,6 +8,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+source "${ROOT}/scripts/lib/ensure-signing-identity.sh"
 
 BIN="${ROOT}/build/DerivedData/Build/Products/Debug/ember-sync"
 PLIST="${ROOT}/Ember/GoogleService-Info.plist"
@@ -31,6 +32,10 @@ echo "Building ember-sync..."
 xcodebuild -project Ember.xcodeproj -scheme EmberSync -configuration Debug \
   -derivedDataPath build/DerivedData build -quiet
 echo "✅ ember-sync built"
+
+ensure_ember_sync_signing_identity
+codesign --force --sign "${EMBER_SIGN_IDENTITY}" --identifier com.ember.sync "${BIN}"
+echo "✅ ember-sync signed with stable identity '${EMBER_SIGN_IDENTITY}'"
 echo ""
 
 echo "Phase 1: Things 3 database read"

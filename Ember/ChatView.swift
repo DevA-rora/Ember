@@ -3,6 +3,7 @@ import SwiftUI
 struct ChatView: View {
     @Environment(AuthManager.self) private var auth
     @State private var contextStore = ThingsContextStore()
+    @State private var profileStore = UserProfileStore()
     @State private var chat = ChatViewModel()
     @State private var showContext = false
 
@@ -48,10 +49,23 @@ struct ChatView: View {
             .sheet(isPresented: $showContext) {
                 ContextSheetView(contextStore: contextStore)
             }
+            .fullScreenCover(isPresented: needsNamePrompt) {
+                NamePromptView { name in
+                    guard let uid = auth.uid else { return }
+                    await profileStore.save(displayName: name, uid: uid)
+                }
+            }
             .task(id: auth.uid) {
                 await reload()
             }
         }
+    }
+
+    private var needsNamePrompt: Binding<Bool> {
+        Binding(
+            get: { profileStore.hasCheckedProfile && profileStore.displayName == nil },
+            set: { _ in }
+        )
     }
 
     private var contextBanner: some View {
@@ -126,7 +140,7 @@ struct ChatView: View {
                 .textFieldStyle(.roundedBorder)
                 .lineLimit(1...5)
             Button {
-                Task { await chat.send(contextMarkdown: contextStore.markdown) }
+                Task { await chat.send(systemInstruction: systemInstruction) }
             } label: {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.title)
@@ -139,7 +153,23 @@ struct ChatView: View {
     private func reload() async {
         guard let uid = auth.uid else { return }
         chat.resetConversation()
-        await contextStore.refresh(uid: uid)
+        async let contextLoad: Void = contextStore.refresh(uid: uid)
+        async let profileLoad: Void = profileStore.load(uid: uid)
+        _ = await (contextLoad, profileLoad)
+    }
+
+    private var suggestedTask: TaskSuggestion? {
+        TaskSuggester.suggest(
+            from: ThingsSnapshot(projects: contextStore.projects, tasks: contextStore.tasks, generatedAt: Date())
+        )
+    }
+
+    private var systemInstruction: String {
+        EmberContextAssembler.systemInstruction(
+            displayName: profileStore.displayName,
+            thingsMarkdown: contextStore.markdown,
+            suggestion: suggestedTask
+        )
     }
 }
 
