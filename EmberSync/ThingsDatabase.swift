@@ -77,6 +77,8 @@ enum ThingsDatabase {
           t.project,
           t.heading,
           t.userModificationDate,
+          t."index",
+          t.start,
           area.title AS areaTitle,
           project.title AS projectTitle,
           heading.title AS headingTitle
@@ -87,6 +89,15 @@ enum ThingsDatabase {
         WHERE t.trashed = 0
           AND t.status = 0
           AND t.type IN (0, 1)
+          AND (
+            t.type = 1
+            OR t.project IS NULL OR t.project = ''
+            OR EXISTS (
+              SELECT 1 FROM TMTask p
+              WHERE p.uuid = t.project
+                AND p.type = 1 AND p.trashed = 0 AND p.status = 0
+            )
+          )
         ORDER BY t."index" ASC
         """
 
@@ -109,9 +120,11 @@ enum ThingsDatabase {
             let startDate = ThingsDate.decodePacked(sqlite3_column_int64(statement, 6))
             let projectId = columnText(statement, 7)
             let modified = sqlite3_column_double(statement, 9)
-            let areaTitle = columnText(statement, 10)
-            let projectTitle = columnText(statement, 11)
-            let headingTitle = columnText(statement, 12)
+            let sortIndex = Int(sqlite3_column_int(statement, 10))
+            let start = Int(sqlite3_column_int(statement, 11))
+            let areaTitle = columnText(statement, 12)
+            let projectTitle = columnText(statement, 13)
+            let headingTitle = columnText(statement, 14)
 
             if type == ThingsItemType.project.rawValue {
                 projects.append(
@@ -122,7 +135,8 @@ enum ThingsDatabase {
                         area: areaTitle.isEmpty ? nil : areaTitle,
                         deadline: deadline,
                         status: status.label,
-                        modifiedAt: modified == 0 ? nil : modified
+                        modifiedAt: modified == 0 ? nil : modified,
+                        sortIndex: sortIndex
                     )
                 )
             } else if type == ThingsItemType.toDo.rawValue {
@@ -136,7 +150,9 @@ enum ThingsDatabase {
                         heading: headingTitle.isEmpty ? nil : headingTitle,
                         deadline: deadline,
                         startDate: startDate,
-                        status: status.label
+                        status: status.label,
+                        sortIndex: sortIndex,
+                        start: start
                     )
                 )
             }

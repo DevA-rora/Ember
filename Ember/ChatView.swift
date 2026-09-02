@@ -146,11 +146,11 @@ private struct ContextSheetView: View {
     @State private var showMarkdown = false
 
     private var tasksByProject: [String: [ThingsTask]] {
-        Dictionary(grouping: contextStore.tasks) { $0.projectId ?? "" }
+        Dictionary(grouping: contextStore.tasks.filter { $0.projectId != nil }) { $0.projectId! }
     }
 
     private var inboxTasks: [ThingsTask] {
-        (tasksByProject[""] ?? []).sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        contextStore.tasks.filter(\.isInbox).sorted { $0.sortIndex < $1.sortIndex }
     }
 
     var body: some View {
@@ -166,7 +166,7 @@ private struct ContextSheetView: View {
                     if !contextStore.projects.isEmpty {
                         Text("Projects")
                             .font(.title3.bold())
-                        ForEach(contextStore.projects.sorted(by: projectSort)) { project in
+                        ForEach(contextStore.projects.sorted { $0.sortIndex < $1.sortIndex }) { project in
                             projectSection(project)
                         }
                     }
@@ -226,6 +226,11 @@ private struct ContextSheetView: View {
                 LabeledContent("Counts") {
                     Text("\(meta.projectCount) projects · \(meta.taskCount) tasks")
                 }
+                if contextStore.projects.count != meta.projectCount || contextStore.tasks.count != meta.taskCount {
+                    Text("Loaded \(contextStore.projects.count) projects, \(contextStore.tasks.count) tasks from Firestore.")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
             } else {
                 Text("No sync metadata yet")
                     .foregroundStyle(.secondary)
@@ -250,9 +255,7 @@ private struct ContextSheetView: View {
     }
 
     private func projectSection(_ project: ThingsProject) -> some View {
-        let nested = (tasksByProject[project.uuid] ?? []).sorted {
-            $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
-        }
+        let nested = (tasksByProject[project.uuid] ?? []).sorted { $0.sortIndex < $1.sortIndex }
         return VStack(alignment: .leading, spacing: 8) {
             Text(project.title)
                 .font(.headline)
@@ -302,15 +305,6 @@ private struct ContextSheetView: View {
             }
         }
         .padding(.leading, indented ? 12 : 0)
-    }
-
-    private func projectSort(_ lhs: ThingsProject, _ rhs: ThingsProject) -> Bool {
-        switch (lhs.deadline, rhs.deadline) {
-        case let (l?, r?): return l < r
-        case (_?, nil): return true
-        case (nil, _?): return false
-        case (nil, nil): return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
-        }
     }
 }
 

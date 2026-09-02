@@ -23,10 +23,14 @@ final class ThingsContextStore {
         do {
             try await seedIfNeeded(uid: uid)
             async let currentDoc = db.document(FirestorePaths.current(uid: uid)).getDocument()
-            async let projectDocs = db.collection(FirestorePaths.projectsCollection(uid: uid)).getDocuments()
-            async let taskDocs = db.collection(FirestorePaths.tasksCollection(uid: uid)).getDocuments()
+            async let projectDocs = fetchAllDocuments(
+                from: db.collection(FirestorePaths.projectsCollection(uid: uid))
+            )
+            async let taskDocs = fetchAllDocuments(
+                from: db.collection(FirestorePaths.tasksCollection(uid: uid))
+            )
 
-            let (currentSnap, projectSnap, taskSnap) = try await (currentDoc, projectDocs, taskDocs)
+            let (currentSnap, projectSnapshots, taskSnapshots) = try await (currentDoc, projectDocs, taskDocs)
 
             if let loaded = try? currentSnap.data(as: ThingsContextDocument.self) {
                 markdown = loaded.markdown
@@ -41,8 +45,8 @@ final class ThingsContextStore {
                 meta = nil
             }
 
-            projects = projectSnap.documents.compactMap { try? $0.data(as: ThingsProject.self) }
-            tasks = taskSnap.documents.compactMap { try? $0.data(as: ThingsTask.self) }
+            projects = projectSnapshots.compactMap { try? $0.data(as: ThingsProject.self) }
+            tasks = taskSnapshots.compactMap { try? $0.data(as: ThingsTask.self) }
 
             if let loaded = try? currentSnap.data(as: ThingsContextDocument.self) {
                 usedSeedData = loaded.source == "seed"
@@ -87,6 +91,21 @@ final class ThingsContextStore {
             try db.document(FirestorePaths.task(uid: uid, uuid: task.uuid)).setData(from: task)
         }
         usedSeedData = true
+    }
+
+    private func fetchAllDocuments(from collection: CollectionReference) async throws -> [QueryDocumentSnapshot] {
+        let pageSize = 500
+        var documents: [QueryDocumentSnapshot] = []
+        var last: QueryDocumentSnapshot?
+        while true {
+            var query: Query = collection.order(by: FieldPath.documentID()).limit(to: pageSize)
+            if let last { query = query.start(afterDocument: last) }
+            let snapshot = try await query.getDocuments()
+            documents.append(contentsOf: snapshot.documents)
+            if snapshot.documents.count < pageSize { break }
+            last = snapshot.documents.last
+        }
+        return documents
     }
 }
 

@@ -180,7 +180,8 @@ enum FirebaseREST {
             "uuid": string(project.uuid),
             "title": string(project.title),
             "notes": string(project.notes),
-            "status": string(project.status)
+            "status": string(project.status),
+            "sortIndex": integer(project.sortIndex)
         ]
         fields["area"] = optionalString(project.area)
         fields["deadline"] = optionalString(project.deadline)
@@ -200,7 +201,9 @@ enum FirebaseREST {
             "projectTitle": optionalString(task.projectTitle),
             "heading": optionalString(task.heading),
             "deadline": optionalString(task.deadline),
-            "startDate": optionalString(task.startDate)
+            "startDate": optionalString(task.startDate),
+            "sortIndex": integer(task.sortIndex),
+            "start": integer(task.start)
         ]
     }
 

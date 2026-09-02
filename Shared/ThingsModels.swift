@@ -28,6 +28,7 @@ struct ThingsProject: Codable, Equatable, Identifiable, Sendable {
     var deadline: String?
     var status: String
     var modifiedAt: TimeInterval?
+    var sortIndex: Int = 0
 
     var id: String { uuid }
 }
@@ -42,8 +43,13 @@ struct ThingsTask: Codable, Equatable, Identifiable, Sendable {
     var deadline: String?
     var startDate: String?
     var status: String
+    /// Things `TMTask.index` — manual order within project/inbox.
+    var sortIndex: Int = 0
+    /// Things `TMTask.start`: 0=Inbox, 1=Anytime, 2=Someday.
+    var start: Int = 1
 
     var id: String { uuid }
+    var isInbox: Bool { start == 0 }
 }
 
 struct ThingsSnapshot: Equatable, Sendable {
@@ -101,7 +107,8 @@ enum SeedFixture {
         area: "Development",
         deadline: "2026-09-07",
         status: ThingsStatus.incomplete.label,
-        modifiedAt: nil
+        modifiedAt: nil,
+        sortIndex: 0
     )
 
     static let task = ThingsTask(
@@ -113,7 +120,9 @@ enum SeedFixture {
         heading: "Firebase",
         deadline: "2026-09-07",
         startDate: nil,
-        status: ThingsStatus.incomplete.label
+        status: ThingsStatus.incomplete.label,
+        sortIndex: 0,
+        start: 1
     )
 
     static var snapshot: ThingsSnapshot {

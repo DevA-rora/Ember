@@ -76,6 +76,10 @@ private func login(arguments: [String]) async throws {
     try EmberConfig.saveCredentials(credentials)
     print("Signed in as \(session.email) (uid \(session.localId)).")
     print("Saved credentials to \(EmberConfig.credentialsURL.path)")
+    print("")
+    print("Next: upload Things 3 data with")
+    print("  ./scripts/sync-things-once.sh")
+    print("Sign into the iOS app with the same email, then Refresh projects.")
 }
 
 private enum LoginError: LocalizedError {
