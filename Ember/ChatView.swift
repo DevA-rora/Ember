@@ -46,49 +46,7 @@ struct ChatView: View {
                 }
             }
             .sheet(isPresented: $showContext) {
-                NavigationStack {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 16) {
-                            if contextStore.usedSeedData {
-                                Text("Showing seeded Firebase fixture until Things 3 sync runs.")
-                                    .font(.footnote)
-                                    .foregroundStyle(.secondary)
-                            }
-                            ForEach(contextStore.projects) { project in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(project.title).font(.headline)
-                                    if let deadline = project.deadline {
-                                        Text("Deadline \(deadline)").font(.subheadline)
-                                    }
-                                    if !project.notes.isEmpty {
-                                        Text(project.notes).font(.footnote).foregroundStyle(.secondary)
-                                    }
-                                }
-                            }
-                            ForEach(contextStore.tasks) { task in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(task.title).font(.headline)
-                                    if let deadline = task.deadline {
-                                        Text("Deadline \(deadline)").font(.subheadline)
-                                    }
-                                    if !task.notes.isEmpty {
-                                        Text(task.notes).font(.footnote).foregroundStyle(.secondary)
-                                    }
-                                }
-                            }
-                            Text(contextStore.markdown)
-                                .font(.system(.footnote, design: .monospaced))
-                                .textSelection(.enabled)
-                        }
-                        .padding()
-                    }
-                    .navigationTitle("Project context")
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Done") { showContext = false }
-                        }
-                    }
-                }
+                ContextSheetView(contextStore: contextStore)
             }
             .task(id: auth.uid) {
                 await reload()
@@ -129,7 +87,7 @@ struct ChatView: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 12) {
                     if chat.messages.isEmpty {
-                        Text("Ask about what you’re working on, a deadline, or a project’s notes.")
+                        Text("Ask about what you're working on, a deadline, or a project's notes.")
                             .foregroundStyle(.secondary)
                             .padding(.top, 24)
                     }
@@ -178,6 +136,181 @@ struct ChatView: View {
         guard let uid = auth.uid else { return }
         chat.resetConversation()
         await contextStore.refresh(uid: uid)
+    }
+}
+
+private struct ContextSheetView: View {
+    @Environment(AuthManager.self) private var auth
+    let contextStore: ThingsContextStore
+    @Environment(\.dismiss) private var dismiss
+    @State private var showMarkdown = false
+
+    private var tasksByProject: [String: [ThingsTask]] {
+        Dictionary(grouping: contextStore.tasks) { $0.projectId ?? "" }
+    }
+
+    private var inboxTasks: [ThingsTask] {
+        (tasksByProject[""] ?? []).sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+    }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    syncStatusHeader
+
+                    if contextStore.usedSeedData {
+                        seedSyncInstructions
+                    }
+
+                    if !contextStore.projects.isEmpty {
+                        Text("Projects")
+                            .font(.title3.bold())
+                        ForEach(contextStore.projects.sorted(by: projectSort)) { project in
+                            projectSection(project)
+                        }
+                    }
+
+                    if !inboxTasks.isEmpty {
+                        Text("Inbox")
+                            .font(.title3.bold())
+                        ForEach(inboxTasks) { task in
+                            taskRow(task)
+                        }
+                    }
+
+                    DisclosureGroup(isExpanded: $showMarkdown) {
+                        Text(contextStore.markdown)
+                            .font(.system(.footnote, design: .monospaced))
+                            .textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } label: {
+                        Text("AI context markdown")
+                            .font(.subheadline.weight(.semibold))
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Project context")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+    }
+
+    private var syncStatusHeader: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let email = auth.email {
+                LabeledContent("Signed in as") {
+                    Text(email)
+                        .textSelection(.enabled)
+                }
+            }
+            if let uid = auth.uid {
+                LabeledContent("UID") {
+                    Text(uid)
+                        .font(.system(.caption, design: .monospaced))
+                        .textSelection(.enabled)
+                }
+            }
+            if let meta = contextStore.meta {
+                LabeledContent("Source") {
+                    Text(meta.source == "things3" ? "Things 3" : meta.source)
+                        .fontWeight(meta.source == "things3" ? .semibold : .regular)
+                }
+                LabeledContent("Synced") {
+                    Text(meta.syncedAt.formatted(date: .abbreviated, time: .shortened))
+                }
+                LabeledContent("Counts") {
+                    Text("\(meta.projectCount) projects · \(meta.taskCount) tasks")
+                }
+            } else {
+                Text("No sync metadata yet")
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .font(.subheadline)
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var seedSyncInstructions: some View {
+        let email = auth.email ?? "this email"
+        return Text(
+            "This account only has placeholder data. On your Mac, run ember-sync login with \(email), then ./scripts/sync-things-once.sh, and tap Refresh here. The UID above must match the sync script output."
+        )
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func projectSection(_ project: ThingsProject) -> some View {
+        let nested = (tasksByProject[project.uuid] ?? []).sorted {
+            $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+        }
+        return VStack(alignment: .leading, spacing: 8) {
+            Text(project.title)
+                .font(.headline)
+            if let deadline = project.deadline {
+                Text("Deadline \(deadline)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            if let area = project.area, !area.isEmpty {
+                Text("Area: \(area)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            if !project.notes.isEmpty {
+                Text(project.notes)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            if nested.isEmpty {
+                Text("No open tasks")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            } else {
+                Text("\(nested.count) open tasks")
+                    .font(.caption.weight(.medium))
+                ForEach(nested) { task in
+                    taskRow(task, indented: true)
+                }
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private func taskRow(_ task: ThingsTask, indented: Bool = false) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(task.title)
+                .font(indented ? .subheadline : .headline)
+            if let deadline = task.deadline {
+                Text("Deadline \(deadline)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            if !task.notes.isEmpty {
+                Text(task.notes)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.leading, indented ? 12 : 0)
+    }
+
+    private func projectSort(_ lhs: ThingsProject, _ rhs: ThingsProject) -> Bool {
+        switch (lhs.deadline, rhs.deadline) {
+        case let (l?, r?): return l < r
+        case (_?, nil): return true
+        case (nil, _?): return false
+        case (nil, nil): return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+        }
     }
 }
 

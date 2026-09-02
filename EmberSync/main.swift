@@ -12,9 +12,12 @@ private let usage = """
 ember-sync — copy open Things 3 projects/tasks into Firestore
 
 Usage:
-  ember-sync login          Sign in with the same Firebase email/password as the iOS app
-  ember-sync --dry-run      Print open projects, notes, and deadlines (no network)
-  ember-sync                Upsert the current Things snapshot to Firestore
+  ember-sync login [--email ADDRESS]   Sign in (same Firebase account as the iOS app)
+  ember-sync --dry-run                 Print open projects, notes, and deadlines (no network)
+  ember-sync                           Upsert the current Things snapshot to Firestore
+
+Login also accepts environment variables (useful in Cursor/VS Code terminals):
+  EMBER_EMAIL=you@example.com EMBER_PASSWORD=secret ember-sync login
 """
 
 private func run(arguments: [String]) async throws {
@@ -24,7 +27,7 @@ private func run(arguments: [String]) async throws {
     }
 
     if arguments.first == "login" {
-        try await login()
+        try await login(arguments: Array(arguments.dropFirst()))
         return
     }
 
@@ -43,10 +46,13 @@ private func run(arguments: [String]) async throws {
     print("Upserted Things snapshot for uid \(session.localId).")
 }
 
-private func login() async throws {
+private func login(arguments: [String]) async throws {
     let plist = EmberConfig.loadPlist()
-    let email = prompt("Email")
-    let password = prompt("Password", hide: true)
+    let email = flagValue("email", in: arguments)
+        ?? ProcessInfo.processInfo.environment["EMBER_EMAIL"]
+        ?? prompt("Email")
+    let password = ProcessInfo.processInfo.environment["EMBER_PASSWORD"]
+        ?? promptPassword()
     var apiKey = plist?.apiKey ?? ""
     var projectId = plist?.projectId ?? ""
     if apiKey.isEmpty {
@@ -54,6 +60,10 @@ private func login() async throws {
     }
     if projectId.isEmpty {
         projectId = prompt("Firebase project id")
+    }
+
+    guard !email.isEmpty, !password.isEmpty else {
+        throw LoginError.missingCredentials
     }
 
     let credentials = EmberCredentials(
@@ -68,11 +78,38 @@ private func login() async throws {
     print("Saved credentials to \(EmberConfig.credentialsURL.path)")
 }
 
-private func prompt(_ label: String, hide: Bool = false) -> String {
-    fputs("\(label): ", stdout)
-    if hide {
-        guard let pointer = getpass("") else { return "" }
-        return String(cString: pointer)
+private enum LoginError: LocalizedError {
+    case missingCredentials
+
+    var errorDescription: String? {
+        "Email and password are required. Use --email, EMBER_EMAIL/EMBER_PASSWORD, or interactive prompts."
     }
+}
+
+private func flagValue(_ name: String, in arguments: [String]) -> String? {
+    let flag = "--\(name)"
+    guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count else {
+        return nil
+    }
+    let value = arguments[index + 1]
+    return value.hasPrefix("--") ? nil : value
+}
+
+private func prompt(_ label: String) -> String {
+    fputs("\(label): ", stdout)
+    fflush(stdout)
+    return (readLine() ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+}
+
+/// `getpass` often hangs or shows nothing in IDE integrated terminals — fall back to visible `readLine`.
+private func promptPassword() -> String {
+    fputs("Password (characters hidden; if stuck, use EMBER_PASSWORD=... ember-sync login): ", stdout)
+    fflush(stdout)
+    if isatty(STDIN_FILENO) != 0, let pointer = getpass("") {
+        let value = String(cString: pointer)
+        if !value.isEmpty { return value }
+    }
+    fputs("(typing will be visible) ", stdout)
+    fflush(stdout)
     return (readLine() ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
 }

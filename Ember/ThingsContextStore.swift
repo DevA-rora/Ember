@@ -44,6 +44,12 @@ final class ThingsContextStore {
             projects = projectSnap.documents.compactMap { try? $0.data(as: ThingsProject.self) }
             tasks = taskSnap.documents.compactMap { try? $0.data(as: ThingsTask.self) }
 
+            if let loaded = try? currentSnap.data(as: ThingsContextDocument.self) {
+                usedSeedData = loaded.source == "seed"
+            } else {
+                usedSeedData = false
+            }
+
             if markdown.isEmpty {
                 markdown = ThingsContextFormatter.markdown(
                     from: ThingsSnapshot(projects: projects, tasks: tasks, generatedAt: Date())

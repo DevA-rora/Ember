@@ -2,35 +2,39 @@
 
 Firebase-backed Things 3 context for a personal chat app.
 
+See [AGENTS.md](AGENTS.md) for product vision, architecture, and implementation status.
+
 ## Status
 
 | Piece | State |
 |-------|--------|
-| iOS app (Auth + chat + AI context) | Code complete — build after freeing disk space |
+| iOS app (Auth + chat + AI context) | **Built** — see [buildApp.md](buildApp.md) |
 | `ember-sync` CLI (Things → Firestore) | **Built** — `--dry-run` reads 14 projects / 388 tasks |
-| Firestore DB + security rules | Deployed on GCP project `ember-devarora` |
-| Firebase Auth / iOS app / AI Logic | **Blocked** — GCP project is not yet a Firebase project |
+| Firestore DB + security rules | Deployed on Firebase project `ember-284cd` |
+| Firebase Auth / iOS app / AI Logic | **Active** on `ember-284cd` |
 
-## One-time Firebase setup (required)
+## One-time Things 3 sync (load real context)
 
-CLI login works (`npx -y firebase-tools@latest login`), but `firebase projects:list` is empty because **`ember-devarora` was created as GCP-only**. Finish in the browser:
-
-1. [Firebase Console](https://console.firebase.google.com) → **Create a project** (or **Add Firebase** to existing `ember-devarora`)
-2. Add **iOS app** with bundle id `com.ember.app`
-3. Download **`GoogleService-Info.plist`** → replace `Ember/GoogleService-Info.plist`
-4. **Authentication** → Email/Password → Enable
-5. **AI Logic** → enable Gemini for the iOS app
-
-Then from the repo:
+Push your Things 3 database to Firestore once, then verify in the iOS app. **Use the same Firebase email/password on Mac and iOS.**
 
 ```bash
-./scripts/setup-firebase.sh
+# 1. Login (once) — same credentials as the iOS app
+build/DerivedData/Build/Products/Debug/ember-sync login
+
+# If the terminal hangs after Email, use env vars instead (common in Cursor):
+EMBER_EMAIL=you@example.com EMBER_PASSWORD=yourpassword build/DerivedData/Build/Products/Debug/ember-sync login
+
+# 2. One-shot sync + verification
+./scripts/sync-things-once.sh
 ```
 
-## Mac sync (WatchPaths)
+In the iOS simulator: sign in → menu → **Refresh projects** → tap **Context**. You should see `source: Things 3`, real project titles, and tasks grouped under each project.
+
+## Mac sync (WatchPaths, optional)
+
+For automatic sync when Things changes, use WatchPaths:
 
 ```bash
-# Build CLI (or use existing build output)
 xcodebuild -project Ember.xcodeproj -scheme EmberSync -derivedDataPath build/DerivedData build
 
 build/DerivedData/Build/Products/Debug/ember-sync login
