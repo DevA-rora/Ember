@@ -6,6 +6,9 @@ struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
     let role: Role
     var text: String
+    /// Buttons offered alongside this message, e.g. the three readiness paths
+    /// ("Of course" / "I guess" / "Not yet") on the session-start greeting.
+    var quickReplies: [String]? = nil
 
     enum Role: Equatable {
         case user
@@ -53,6 +56,27 @@ final class ChatViewModel {
         contextFingerprint = ""
         messages = []
         errorMessage = nil
+    }
+
+    /// Posts a deterministic opening turn — no model call — naming the user and
+    /// a suggested task, with the three readiness buttons. Deterministic rather
+    /// than model-generated keeps it instant, free, and always on-format; the
+    /// model only takes over once a readiness path is chosen. No-op if a
+    /// conversation is already underway.
+    func startSession(displayName: String?, suggestion: TaskSuggestion?) {
+        guard messages.isEmpty else { return }
+        let name = displayName ?? "there"
+        let greeting = suggestion.map { "Hey \(name), ready to work on \u{201C}\($0.task.title)\u{201D}?" }
+            ?? "Hey \(name), what would you like to work on?"
+        messages.append(
+            ChatMessage(role: .assistant, text: greeting, quickReplies: ["Of course", "I guess", "Not yet"])
+        )
+    }
+
+    /// Sends a tapped quick-reply button as if the user had typed it.
+    func selectQuickReply(_ reply: String, systemInstruction: String) async {
+        input = reply
+        await send(systemInstruction: systemInstruction)
     }
 
     private func ensureChat(systemInstruction: String) throws {

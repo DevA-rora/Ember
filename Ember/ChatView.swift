@@ -53,10 +53,14 @@ struct ChatView: View {
                 NamePromptView { name in
                     guard let uid = auth.uid else { return }
                     await profileStore.save(displayName: name, uid: uid)
+                    chat.startSession(displayName: profileStore.displayName, suggestion: suggestedTask)
                 }
             }
             .task(id: auth.uid) {
                 await reload()
+                if profileStore.displayName != nil {
+                    chat.startSession(displayName: profileStore.displayName, suggestion: suggestedTask)
+                }
             }
         }
     }
@@ -110,13 +114,19 @@ struct ChatView: View {
                             .padding(.top, 24)
                     }
                     ForEach(chat.messages) { message in
-                        HStack {
-                            if message.role == .user { Spacer(minLength: 40) }
-                            Text(message.text)
-                                .padding(12)
-                                .background(message.role == .user ? Color.accentColor.opacity(0.15) : Color.fill.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
-                            if message.role == .assistant { Spacer(minLength: 40) }
+                        VStack(alignment: message.role == .user ? .trailing : .leading, spacing: 8) {
+                            HStack {
+                                if message.role == .user { Spacer(minLength: 40) }
+                                Text(message.text)
+                                    .padding(12)
+                                    .background(message.role == .user ? Color.accentColor.opacity(0.15) : Color.fill.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
+                                if message.role == .assistant { Spacer(minLength: 40) }
+                            }
+                            if message.id == chat.messages.last?.id, let quickReplies = message.quickReplies {
+                                quickReplyRow(quickReplies)
+                            }
                         }
+                        .frame(maxWidth: .infinity, alignment: message.role == .user ? .trailing : .leading)
                         .id(message.id)
                     }
                     if chat.isThinking {
@@ -130,6 +140,18 @@ struct ChatView: View {
                 if let last = chat.messages.last?.id {
                     proxy.scrollTo(last, anchor: .bottom)
                 }
+            }
+        }
+    }
+
+    private func quickReplyRow(_ replies: [String]) -> some View {
+        HStack(spacing: 8) {
+            ForEach(replies, id: \.self) { reply in
+                Button(reply) {
+                    Task { await chat.selectQuickReply(reply, systemInstruction: systemInstruction) }
+                }
+                .buttonStyle(.bordered)
+                .disabled(chat.isThinking)
             }
         }
     }
