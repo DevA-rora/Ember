@@ -78,18 +78,19 @@ service cloud.firestore {
     }
 
     function isValidProject(data) {
-      return hasOnlyAllowedFields(['uuid', 'title', 'notes', 'area', 'deadline', 'status', 'modifiedAt']) &&
+      return hasOnlyAllowedFields(['uuid', 'title', 'notes', 'area', 'deadline', 'status', 'modifiedAt', 'sortIndex']) &&
         data.uuid is string && data.uuid.size() > 0 && data.uuid.size() < 80 &&
         data.title is string && data.title.size() > 0 && data.title.size() <= 500 &&
         data.notes is string && data.notes.size() <= 20000 &&
         isValidStatus(data.status) &&
         (!( 'area' in data) || data.area == null || (data.area is string && data.area.size() <= 200)) &&
         isOptionalDateString(data, 'deadline') &&
-        (!( 'modifiedAt' in data) || data.modifiedAt == null || data.modifiedAt is number);
+        (!( 'modifiedAt' in data) || data.modifiedAt == null || data.modifiedAt is number) &&
+        (!( 'sortIndex' in data) || data.sortIndex is int);
     }
 
     function isValidTask(data) {
-      return hasOnlyAllowedFields(['uuid', 'title', 'notes', 'projectId', 'projectTitle', 'heading', 'deadline', 'startDate', 'status']) &&
+      return hasOnlyAllowedFields(['uuid', 'title', 'notes', 'projectId', 'projectTitle', 'heading', 'deadline', 'startDate', 'status', 'sortIndex', 'start']) &&
         data.uuid is string && data.uuid.size() > 0 && data.uuid.size() < 80 &&
         data.title is string && data.title.size() > 0 && data.title.size() <= 500 &&
         data.notes is string && data.notes.size() <= 20000 &&
@@ -98,7 +99,9 @@ service cloud.firestore {
         (!( 'projectTitle' in data) || data.projectTitle == null || (data.projectTitle is string && data.projectTitle.size() <= 500)) &&
         (!( 'heading' in data) || data.heading == null || (data.heading is string && data.heading.size() <= 500)) &&
         isOptionalDateString(data, 'deadline') &&
-        isOptionalDateString(data, 'startDate');
+        isOptionalDateString(data, 'startDate') &&
+        (!( 'sortIndex' in data) || data.sortIndex is int) &&
+        (!( 'start' in data) || (data.start is int && data.start >= 0 && data.start <= 2));
     }
 
     match /users/{userId} {

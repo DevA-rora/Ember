@@ -74,7 +74,11 @@ struct ChatView: View {
 
     private var bannerDetail: String {
         if let meta = contextStore.meta {
-            return "\(meta.projectCount) projects · \(meta.taskCount) tasks"
+            var detail = "\(meta.projectCount) projects · \(meta.taskCount) tasks"
+            if contextStore.projects.count != meta.projectCount || contextStore.tasks.count != meta.taskCount {
+                detail += " (loaded \(contextStore.projects.count)/\(contextStore.tasks.count) — tap Refresh)"
+            }
+            return detail
         }
         if contextStore.projects.isEmpty && contextStore.tasks.isEmpty {
             return "No projects loaded yet"

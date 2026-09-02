@@ -155,6 +155,73 @@ enum FirebaseREST {
         for chunk in writes.chunked(into: 450) {
             try await commit(projectId: credentials.projectId, token: session.idToken, writes: chunk)
         }
+
+        let currentProjectIDs = Set(snapshot.projects.map(\.uuid))
+        let currentTaskIDs = Set(snapshot.tasks.map(\.uuid))
+        let prunedProjects = try await pruneStaleDocuments(
+            projectId: credentials.projectId,
+            token: session.idToken,
+            collectionPath: FirestorePaths.projectsCollection(uid: session.localId),
+            keepIDs: currentProjectIDs
+        )
+        let prunedTasks = try await pruneStaleDocuments(
+            projectId: credentials.projectId,
+            token: session.idToken,
+            collectionPath: FirestorePaths.tasksCollection(uid: session.localId),
+            keepIDs: currentTaskIDs
+        )
+        if prunedProjects > 0 || prunedTasks > 0 {
+            print("Pruned \(prunedProjects) stale project(s) and \(prunedTasks) stale task(s) from Firestore.")
+        }
+    }
+
+    private static func pruneStaleDocuments(
+        projectId: String,
+        token: String,
+        collectionPath: String,
+        keepIDs: Set<String>
+    ) async throws -> Int {
+        let existingIDs = try await listCollectionDocumentIDs(
+            projectId: projectId,
+            token: token,
+            collectionPath: collectionPath
+        )
+        let staleIDs = existingIDs.subtracting(keepIDs)
+        guard !staleIDs.isEmpty else { return 0 }
+
+        let deletes = staleIDs.map { id in
+            deleteWrite(name: documentName(projectId: projectId, path: "\(collectionPath)/\(id)"))
+        }
+        for chunk in deletes.chunked(into: 450) {
+            try await commit(projectId: projectId, token: token, writes: chunk)
+        }
+        return staleIDs.count
+    }
+
+    private static func listCollectionDocumentIDs(
+        projectId: String,
+        token: String,
+        collectionPath: String
+    ) async throws -> Set<String> {
+        var ids: Set<String> = []
+        var pageToken: String?
+        repeat {
+            var urlString =
+                "https://firestore.googleapis.com/v1/projects/\(projectId)/databases/(default)/documents/\(collectionPath)?pageSize=300"
+            if let pageToken {
+                urlString += "&pageToken=\(pageToken.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? pageToken)"
+            }
+            let url = URL(string: urlString)!
+            let json = try await getJSON(url: url, bearer: token)
+            if let documents = json["documents"] as? [[String: Any]] {
+                for document in documents {
+                    guard let name = document["name"] as? String else { continue }
+                    ids.insert(name.split(separator: "/").last.map(String.init) ?? name)
+                }
+            }
+            pageToken = json["nextPageToken"] as? String
+        } while pageToken != nil
+        return ids
     }
 
     private static func commit(projectId: String, token: String, writes: [[String: Any]]) async throws {
@@ -173,6 +240,10 @@ enum FirebaseREST {
                 "fields": fields
             ]
         ]
+    }
+
+    private static func deleteWrite(name: String) -> [String: Any] {
+        ["delete": name]
     }
 
     private static func projectFields(_ project: ThingsProject) -> [String: Any] {
@@ -215,6 +286,21 @@ enum FirebaseREST {
     private static func integer(_ value: Int) -> [String: Any] { ["integerValue": "\(value)"] }
     private static func double(_ value: Double) -> [String: Any] { ["doubleValue": value] }
     private static func timestamp(_ iso: String) -> [String: Any] { ["timestampValue": iso] }
+
+    private static func getJSON(url: URL, bearer: String) async throws -> [String: Any] {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+        let body = String(data: data, encoding: .utf8) ?? ""
+        guard (200...299).contains(status) else {
+            throw FirebaseRESTError.http(status, body)
+        }
+        if data.isEmpty { return [:] }
+        let object = try JSONSerialization.jsonObject(with: data)
+        return object as? [String: Any] ?? [:]
+    }
 
     private static func postJSON(url: URL, json: [String: Any], bearer: String?) async throws -> [String: Any] {
         var request = URLRequest(url: url)

@@ -22,7 +22,7 @@ final class ThingsContextStore {
         defer { isLoading = false }
         do {
             try await seedIfNeeded(uid: uid)
-            async let currentDoc = db.document(FirestorePaths.current(uid: uid)).getDocument()
+            async let currentDoc = db.document(FirestorePaths.current(uid: uid)).getDocument(source: .server)
             async let projectDocs = fetchAllDocuments(
                 from: db.collection(FirestorePaths.projectsCollection(uid: uid))
             )
@@ -45,8 +45,12 @@ final class ThingsContextStore {
                 meta = nil
             }
 
-            projects = projectSnapshots.compactMap { try? $0.data(as: ThingsProject.self) }
-            tasks = taskSnapshots.compactMap { try? $0.data(as: ThingsTask.self) }
+            projects = projectSnapshots
+                .compactMap { try? $0.data(as: ThingsProject.self) }
+                .sorted { $0.sortIndex < $1.sortIndex }
+            tasks = taskSnapshots
+                .compactMap { try? $0.data(as: ThingsTask.self) }
+                .sorted { $0.sortIndex < $1.sortIndex }
 
             if let loaded = try? currentSnap.data(as: ThingsContextDocument.self) {
                 usedSeedData = loaded.source == "seed"
@@ -100,7 +104,7 @@ final class ThingsContextStore {
         while true {
             var query: Query = collection.order(by: FieldPath.documentID()).limit(to: pageSize)
             if let last { query = query.start(afterDocument: last) }
-            let snapshot = try await query.getDocuments()
+            let snapshot = try await query.getDocuments(source: .server)
             documents.append(contentsOf: snapshot.documents)
             if snapshot.documents.count < pageSize { break }
             last = snapshot.documents.last

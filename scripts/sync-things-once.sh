@@ -140,6 +140,48 @@ else
   FAIL=1
 fi
 
+SUBCOLLECTION_COUNTS=$(python3 - "$PROJECT_ID" "$FIREBASE_UID" "$ID_TOKEN" <<'PY'
+import json, sys, urllib.request, urllib.parse
+
+project_id, uid, token = sys.argv[1:4]
+
+def count_collection(path):
+    total = 0
+    page_token = None
+    while True:
+        url = f"https://firestore.googleapis.com/v1/projects/{project_id}/databases/(default)/documents/{path}?pageSize=300"
+        if page_token:
+            url += "&pageToken=" + urllib.parse.quote(page_token)
+        req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+        data = json.loads(urllib.request.urlopen(req).read().decode())
+        total += len(data.get("documents", []))
+        page_token = data.get("nextPageToken")
+        if not page_token:
+            break
+    return total
+
+projects = count_collection(f"users/{uid}/things/current/projects")
+tasks = count_collection(f"users/{uid}/things/current/tasks")
+print(f"{projects} {tasks}")
+PY
+)
+FS_SUBCOLLECTION_PROJECTS="${SUBCOLLECTION_COUNTS%% *}"
+FS_SUBCOLLECTION_TASKS="${SUBCOLLECTION_COUNTS##* }"
+
+if [[ "$FS_SUBCOLLECTION_PROJECTS" == "$FS_PROJECTS" ]]; then
+  echo "✅ projects subcollection has $FS_SUBCOLLECTION_PROJECTS docs (matches projectCount)"
+else
+  echo "❌ projects subcollection mismatch: docs=$FS_SUBCOLLECTION_PROJECTS projectCount=$FS_PROJECTS"
+  FAIL=1
+fi
+
+if [[ "$FS_SUBCOLLECTION_TASKS" == "$FS_TASKS" ]]; then
+  echo "✅ tasks subcollection has $FS_SUBCOLLECTION_TASKS docs (matches taskCount)"
+else
+  echo "❌ tasks subcollection mismatch: docs=$FS_SUBCOLLECTION_TASKS taskCount=$FS_TASKS"
+  FAIL=1
+fi
+
 echo ""
 echo "==========================="
 if [[ "$FAIL" -eq 0 ]]; then
