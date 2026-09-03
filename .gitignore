@@ -13,3 +13,9 @@ build/
 Package.resolved
 firebase-debug.log
 .firestore-rules-analysis.md
+
+# Firebase client config — contains a project API key.
+# Regenerate with: npx firebase-tools apps:sdkconfig IOS --project ember-284cd > Ember/GoogleService-Info.plist
+# or download from https://console.firebase.google.com → Project settings → Your apps.
+GoogleService-Info.plist
+Ember/GoogleService-Info.plist

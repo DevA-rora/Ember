@@ -4,6 +4,19 @@ Firebase-backed Things 3 context for a personal chat app.
 
 See [AGENTS.md](AGENTS.md) for product vision, architecture, and implementation status.
 
+## Setup: Firebase config (first time / new clone)
+
+`Ember/GoogleService-Info.plist` is **not committed** (it contains a project API key) — copy the
+example and fill it in, or regenerate it from Firebase:
+
+```bash
+cp Ember/GoogleService-Info.plist.example Ember/GoogleService-Info.plist
+# then either edit it by hand with values from
+# https://console.firebase.google.com/project/ember-284cd/settings/general
+# or regenerate directly:
+npx -y firebase-tools@latest apps:sdkconfig IOS --project ember-284cd > Ember/GoogleService-Info.plist
+```
+
 ## Status
 
 | Piece | State |
